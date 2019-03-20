@@ -6,6 +6,7 @@ class CalcContoller {
         this._timeEl = document.querySelector("#hora");
         this._currentDate;
         this.initialize();
+        this.inputButtonsEvents();
     }
 
     initialize(){
@@ -15,6 +16,24 @@ class CalcContoller {
             this.setDisplayDateTime();
         }, 1000);
         
+    }
+
+    addEventListenerAll(element, events, fn){
+        events.split(' ').forEach(e =>{
+            element.addEventListener(e, fn, false);
+        })
+    }
+
+    inputButtonsEvents(){
+        let buttons = document.querySelectorAll("#buttons > g, #parts > g");
+
+        [...buttons].forEach(btn=>{
+            this.addEventListenerAll(btn,'click', e => {
+                console.log(btn.className.baseVal.replace('btn-',""));
+            })
+
+            this.addEventListenerAll(btn, 'mouseover mouseup mousedown', e => btn.style.cursor = 'pointer')
+        })
     }
 
     setDisplayDateTime(){

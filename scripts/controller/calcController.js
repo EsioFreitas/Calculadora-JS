@@ -31,6 +31,7 @@ class CalcContoller {
 
     clearAll(){
         this._operation = [];
+        this.displayCalc = '0';
     }
 
     addOperation(value){
@@ -39,7 +40,8 @@ class CalcContoller {
     }
 
     clearEntry(){
-        this._operation.pop()
+        this._operation.pop();
+        this.displayCalc = '0';
     }
 
     getLastOperation(){
@@ -50,6 +52,7 @@ class CalcContoller {
         let last = this._operation.pop();
         let result = eval(this._operation.join(''));
         this._operation = [result, last];
+        this.setNumberToDisplay();
     }
 
     pushOperator(value){
@@ -72,6 +75,7 @@ class CalcContoller {
                 
             }else {
                 this.pushOperator(value);
+                this.setNumberToDisplay();
             }
         }else { 
 
@@ -84,6 +88,19 @@ class CalcContoller {
                 
             }
         }
+    }
+
+    setNumberToDisplay(){
+        let lastNumber;
+        for (let i = this._operation.length-1; i >= 0; i--) {
+            if(!this.isOperation(this._operation[i])){
+                lastNumber = this._operation[i];
+                break;
+            }
+            
+        }
+
+        this.displayCalc = lastNumber; 
     }
 
     setLastOperation(value){

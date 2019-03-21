@@ -25,6 +25,10 @@ class CalcContoller {
         })
     }
 
+    isOperation(value){
+        return (['+', '-', '*', '/', '%'].indexOf(value) > -1);
+    }
+
     clearAll(){
         this._operation = [];
     }
@@ -38,6 +42,31 @@ class CalcContoller {
         this._operation.pop()
     }
 
+    getLastOperation(){
+        return (this._operation[this._operation.length-1]);
+    }
+
+
+    addOperation(value){
+        console.log(this._operation)
+        if(isNaN(this.getLastOperation())){
+
+            if(this.isOperation(value)){
+                this.setLastOperation(value);
+            }else if(isNaN(value)){
+                
+            }else {
+                this._operation.push(value);
+            }
+        }else { 
+            let newValue = this.getLastOperation().toString() + value.toString();
+            this.setLastOperation(parseInt (newValue));
+        }
+    }
+
+    setLastOperation(value){
+        this._operation[this._operation.length-1]= value;
+    }
     
     setError(){
         this.displayCalc = 'Error'; 
@@ -52,22 +81,25 @@ class CalcContoller {
                 this.clearEntry();
                 break;
             case 'soma':
-                
+                this.addOperation('+');                
                 break;
             case 'divisao':
-                
+                this.addOperation('/'); 
                 break;
             case 'subtracao':
-                
+                this.addOperation('-'); 
                 break;
             case 'multiplicacao':
-                
+                this.addOperation('*'); 
                 break;
             case 'porcento':
-                
+                this.addOperation('%'); 
                 break;
             case 'igual':
                 
+                break;
+            case 'ponto':
+                this.addOperation('.'); 
                 break;
 
             case '0':
@@ -80,7 +112,7 @@ class CalcContoller {
             case '7':
             case '8':
             case '9':
-                this.addOperation(value)
+                this.addOperation(value);
                 break;
         
             default:

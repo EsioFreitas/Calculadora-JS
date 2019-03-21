@@ -46,6 +46,21 @@ class CalcContoller {
         return (this._operation[this._operation.length-1]);
     }
 
+    calc(){
+        let last = this._operation.pop();
+        let result = eval(this._operation.join(''));
+        this._operation = [result, last];
+    }
+
+    pushOperator(value){
+        this._operation.push(value);
+
+        if(this._operation.length > 3){
+            this.calc();
+        }else {
+
+        }
+    }
 
     addOperation(value){
         console.log(this._operation)
@@ -56,11 +71,18 @@ class CalcContoller {
             }else if(isNaN(value)){
                 
             }else {
-                this._operation.push(value);
+                this.pushOperator(value);
             }
         }else { 
-            let newValue = this.getLastOperation().toString() + value.toString();
-            this.setLastOperation(parseInt (newValue));
+
+            if( this.isOperation(value)){
+                this.pushOperator(value);
+            }else {
+                let newValue = this.getLastOperation().toString() + value.toString();
+                this.setLastOperation(parseInt (newValue));
+                this.setNumberToDisplay();
+                
+            }
         }
     }
 

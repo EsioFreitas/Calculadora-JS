@@ -1,5 +1,7 @@
 class CalcContoller {
     constructor() {
+        this._lastOperator = '';
+        this._lasNumber = '';   
         this._operation = [];
         this._locale = 'pt-BR'
         this._displayEl = document.querySelector("#display");
@@ -48,23 +50,36 @@ class CalcContoller {
         return (this._operation[this._operation.length-1]);
     }
 
+    getResult(){
+        return eval(this._operation.join(''));
+    }
+
     calc(){
         let last = '';
+        
+        this._lastOperator = this.getLastItem(); 
+
+        if(this._operation < 3){
+            let firstItem = this._operation[0];
+            this._operation = [firstItem, this._lastOperator, this._lasNumber];
+        }
 
         if(this._operation > 3){
             last =  this._operation.pop();
-        }
+            this._lasNumber = this.getResult();
+        }else if(this._operation == 3)
+            this._lasNumber = this.getLastItem(false);
 
-        let result = eval(this._operation.join(''));
+        let result = this.getResult();
 
         if(last == '%'){
             result /= 100;
             this._operation = [result];
         }else {
             this._operation = [result];
-
             if(last) this._operation.push(last);
         }
+
         this.setNumberToDisplay();
     }
 
@@ -103,15 +118,26 @@ class CalcContoller {
         }
     }
 
-    setNumberToDisplay(){
-        let lastNumber;
+    getLastItem(isOperator = true){
+        let lastItem;
+
         for (let i = this._operation.length-1; i >= 0; i--) {
-            if(!this.isOperation(this._operation[i])){
-                lastNumber = this._operation[i];
+            if(this.isOperation(this._operation[i]) == isOperator){
+                lastItem = this._operation[i];
                 break;
-            }
-            
+            } 
         }
+
+        if(!lastItem)
+            lastItem = (isOperator) ? this._lastOperator : this._lasNumber;
+
+        return lastItem;
+    }
+
+    setNumberToDisplay(){
+        let lastNumber = this.getLastItem(false);
+
+        if(!lastNumber) lastNumber = 0; 
 
         this.displayCalc = lastNumber; 
     }

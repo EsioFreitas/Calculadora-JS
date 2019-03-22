@@ -33,17 +33,19 @@ class CalcContoller {
 
     clearAll(){
         this._operation = [];
-        this.displayCalc = '0';
+        this._lasNumber = '';
+        this._lastOperator ='';
+
+        this.setNumberToDisplay()
     }
 
     addOperation(value){
         this._operation.push(value);
-        console.log(this._operation)
     }
 
     clearEntry(){
         this._operation.pop();
-        this.displayCalc = '0';
+        this.setNumberToDisplay()
     }
 
     getLastOperation(){
@@ -111,7 +113,7 @@ class CalcContoller {
                 this.pushOperator(value);
             }else {
                 let newValue = this.getLastOperation().toString() + value.toString();
-                this.setLastOperation(parseInt (newValue));
+                this.setLastOperation( (newValue));
                 this.setNumberToDisplay();
                 
             }
@@ -150,6 +152,18 @@ class CalcContoller {
         this.displayCalc = 'Error'; 
     }
 
+    addDot(){
+        let lasOperation = this.getLastOperation();
+
+        if(typeof lasOperation === 'string' && lasOperation.split('').indexOf('.') > -1) return;
+
+        if(this.isOperation(lasOperation) || !lasOperation)
+            this.pushOperator('0.');
+        else this.setLastOperation(lasOperation.toString()+'.');
+
+        this.setNumberToDisplay();
+    }
+
     execBtn(value){
         switch (value) {
             case 'ac':
@@ -177,7 +191,7 @@ class CalcContoller {
                 this.calc();    
                 break;
             case 'ponto':
-                this.addOperation('.'); 
+                this.addDot(); 
                 break;
 
             case '0':

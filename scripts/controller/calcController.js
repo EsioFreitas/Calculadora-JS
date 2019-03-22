@@ -12,6 +12,22 @@ class CalcContoller {
         this.inputButtonsEvents();
     }
 
+    copyToClipBoard(){
+        let input = document.createElement('input');
+        input.value = this.displayCalc;
+        document.body.appendChild(input);
+        input.select();
+        document.execCommand('Copy');
+        input.remove();
+    }
+
+    pasteClipboard(){
+        document.addEventListener('paste', e => {
+            let text = e.clipboardData.getData('Text');
+            this.displayCalc = parseFloat(text);
+        })
+    }
+
     initialize(){
         this.setDisplayDateTime();
 
@@ -19,6 +35,7 @@ class CalcContoller {
             this.setDisplayDateTime();
         }, 1000);
         this.initKeyboard();
+        this.pasteClipboard();
     }
 
     addEventListenerAll(element, events, fn){
@@ -200,6 +217,10 @@ class CalcContoller {
                 case '8':
                 case '9':
                     this.addOperation(parseInt(e.key));
+                    break;
+
+                case 'c':
+                    if(e.ctrlKey) this.copyToClipBoard();
                     break;
             }
         })
